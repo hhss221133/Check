@@ -57,8 +57,7 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
         if(mode == 1) {
             require(ClaimedMeka[msg.sender] + _mintAmount < 3, "Exceeds meka allowance");
         }
-        
-        if(mode == 2) {
+        else if(mode == 2) {
             require(ClaimedWhitelist[msg.sender] + _mintAmount < 3, "Exceeds whitelist allowance");
         }
 
@@ -66,15 +65,14 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
             bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
             require(MerkleProof.verify(proof, merkleRoot, leaf), "Verification failed");
         }  
-        
+
         if (mode == 1) {
             ClaimedMeka[msg.sender] += _mintAmount;
         }
-        
-        if (mode == 2) {
+        else if(mode == 2) {
             ClaimedWhitelist[msg.sender] += _mintAmount;
         }
-        
+
         _mintLoop(msg.sender, _mintAmount); 
     }
 
