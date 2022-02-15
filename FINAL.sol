@@ -13,16 +13,16 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
 
     Counters.Counter private supply;
 
-    string private uriPrefix = "ipfs://-CID-/";
+    string private uriPrefix = ""; //ipfs://-CID-/  ///OKAY
     string public hiddenMetadataUri;
 
-    uint256 private cost = 0.01 ether; 
-    uint256 public maxSupply = 25; //6666
-    uint256 public softCap = 18; //6397
+    uint256 private cost = 0.12 ether; 
+    uint256 public maxSupply = 6666; //6666         ///OKAY
+    uint256 public softCap = 6397; //6397           ///OKAY
     uint256 public constant maxMintAmountPerTx = 2;
     uint256 private mode = 1; 
 
-    bool public paused = false;
+    bool public paused = true; ///OKAY
     bool public revealed = false;
 
     bytes32 public merkleRoot = 0xc1ba3879f772a545a6cf9b5b67ac504b771d233b9a8ff1dbc25c8bbfa6fa3fbd;
@@ -30,14 +30,16 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
     mapping(address => uint256) public ClaimedWhitelist;
     mapping(address => uint256) public ClaimedMeka;
 
-    address public immutable proxyRegistryAddress = address(0xF57B2c51dED3A29e6891aba85459d600256Cf317);
+    address public immutable proxyRegistryAddress = address(0xa5409ec958C83C3f309868babACA7c86DCB077c1); ///OKAY
     //Rinkeby: 0xF57B2c51dED3A29e6891aba85459d600256Cf317
     //Mainnet: 0xa5409ec958C83C3f309868babACA7c86DCB077c1
 
-    address private constant withdrawTo = 0xB0B40d282bF17825bBe0e4DC31C9881b0D5Ab640; //funds reserve address
+    address private constant withdrawTo = 0xFe5c087fD87891cA23AB98904d65A92D15A07D45; //funds reserve address ALSO owner ///OKAY
 
     constructor() ERC721("Aotaverse", "AOTA") ReentrancyGuard() {
-        setHiddenMetadataUri("ipfs://QmdmCPU148vbfLPxBRgqMECYob7biaEtaBW3V1QeRnkFNJ/hidden_metadata.json"); //set hidden URI
+        setHiddenMetadataUri("ipfs://QmSmhmLBBWhL12S9UsF4LAPKhtWdVfbj3Y6ByRRB2fc9ie/blind.json"); //blind box
+        supply.increment();
+        _safeMint(msg.sender, supply.current()); 
     }
 
     //MODIFIERS
@@ -140,12 +142,12 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
     function togglemode() public onlyOwner { //pass
         if(mode == 1) {
             mode = 2;
-            cost = 0.02 ether;
+            cost = 0.15 ether;
             merkleRoot = 0x5de192325d5f8d30a297ea7bc7431dc29f05b8109ede40e7a270739e94a31eab;
         }
         else if(mode == 2) {
             mode = 3;
-            cost = 0.03 ether;
+            cost = 0.2 ether;
             merkleRoot = bytes32(0x00);
         }
         else if (mode == 3) {
@@ -154,7 +156,7 @@ contract Aotaverse is ERC721, Ownable, ReentrancyGuard {
         }
         else {
             mode = 1;
-            cost = 0.01 ether;
+            cost = 0.12 ether;
         }
     }
     
