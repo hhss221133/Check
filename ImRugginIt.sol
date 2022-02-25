@@ -33,7 +33,7 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
         _safeMint(msg.sender, 1);
     }
 
-    function mint(bytes32[] memory proof, uint256 _mintAmount) public payable nonReentrant {
+    function mint(bytes32[] memory proof, uint256 _mintAmount) external payable nonReentrant {
         require(!Paused);
 
         if (PubSale) {
@@ -57,7 +57,7 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
     function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
         if (!_exists(tokenId)) revert URIQueryForNonexistentToken();
 
-        if(Revealed == false) {
+        if(!Revealed) {
             return HiddenUri;
         }
 
