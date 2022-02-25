@@ -2,7 +2,7 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-import "./ERC721A.sol"; 
+import "../ParentContract/ERC721A.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
@@ -15,11 +15,11 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
     //Mainnet: 0xa5409ec958C83C3f309868babACA7c86DCB077c1
 
     string public Uri = "";
-    string public HiddenUri = "";
+    string public HiddenUri = "Okay";
 
     uint256 public pubSale = 1672;
     uint256 public MaxSupply = 2022;
-    uint256 public cost = 0.0169 ether;
+    uint256 public cost = 0.01 ether;
 
     bytes32 public MerkleRoot;
 
@@ -46,7 +46,7 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
             require(msg.value > cost - 1, "Insufficient funds");
             require(FreeMint[msg.sender] == false);
             require(totalSupply() + _mintAmount < MaxSupply+1);
-            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender)), "Cringe."));
+            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe.");
             FreeMint[msg.sender] = true;
         }
         _safeMint(msg.sender, _mintAmount);
