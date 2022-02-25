@@ -39,15 +39,14 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
         if (PubSale) {
             require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers.");
             require(msg.value > cost * _mintAmount - 1, "Insufficient funds");
-            require(totalSupply() + _mintAmount < pubSale);
+            require(totalSupply() + _mintAmount < pubSale+1);
         }
         else {
             require(_mintAmount == 1);
             require(msg.value > cost - 1, "Insufficient funds");
             require(FreeMint[msg.sender] == false);
-            require(totalSupply() + _mintAmount < MaxSupply);
-            bytes32 leaf = keccak256(abi.encodePacked(msg.sender));
-            require(MerkleProof.verify(proof, MerkleRoot, leaf), "Cringe.");
+            require(totalSupply() + _mintAmount < MaxSupply+1);
+            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender)), "Cringe.");
             FreeMint[msg.sender] == true;
         }
         _safeMint(msg.sender, _mintAmount);
