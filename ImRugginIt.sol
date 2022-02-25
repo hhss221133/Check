@@ -46,7 +46,7 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
             require(msg.value > cost - 1, "Insufficient funds");
             require(FreeMint[msg.sender] == false);
             require(totalSupply() + _mintAmount < MaxSupply+1);
-            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender)), "Cringe.");
+            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender)), "Cringe."));
             FreeMint[msg.sender] == true;
         }
         _safeMint(msg.sender, _mintAmount);
