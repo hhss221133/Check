@@ -17,8 +17,8 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
     string public Uri = "";
     string public HiddenUri = "Okay";
 
-    uint256 public pubSale = 1672;
-    uint256 public MaxSupply = 2022;
+    uint256 public pubSale = 20;
+    uint256 public MaxSupply = 40;
     uint256 public cost = 0.01 ether;
 
     bytes32 public MerkleRoot;
@@ -44,7 +44,6 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
         else {
             require(_mintAmount == 1);
             require(msg.value > cost - 1, "Insufficient funds");
-            require(FreeMint[msg.sender] == false);
             require(totalSupply() + _mintAmount < MaxSupply+1);
             require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe.");
             FreeMint[msg.sender] = true;
@@ -87,6 +86,10 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
 
     function setRevealed(bool _Revealed) external onlyOwner {
         Revealed = _Revealed;
+    }
+
+    function setPubSale(bool _PubSale) external onlyOwner {
+        PubSale = _PubSale;
     }
 
     //withdraw
