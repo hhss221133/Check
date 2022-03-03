@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
-contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
+contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     address public immutable proxyRegistryAddress = address(0xF57B2c51dED3A29e6891aba85459d600256Cf317);
@@ -29,25 +29,29 @@ contract ImRugginIt is ERC721A, Ownable, ReentrancyGuard {
 
     mapping(address => bool) public FreeMint;
     
-    constructor() ERC721A("I'm Ruggin' It", "IRI") {
+    constructor() ERC721A("Just Rug It", "JRI") {
         _safeMint(msg.sender, 1);
+    }
+
+    function mint(uint256 _mintAmount) external payable nonReentrant {
+        require(!Paused);
+
+        require(PubSale);
+        require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers.");
+        require(msg.value > cost * _mintAmount - 1, "You're poor, NGMI for this mint.");
+        require(totalSupply() + _mintAmount < pubSale+1);
+    
+        _safeMint(msg.sender, _mintAmount);
     }
 
     function mint(bytes32[] memory proof, uint256 _mintAmount) external payable nonReentrant {
         require(!Paused);
-
-        if (PubSale) {
-            require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers.");
-            require(msg.value > cost * _mintAmount - 1, "Insufficient funds");
-            require(totalSupply() + _mintAmount < pubSale+1);
-        }
-        else {
-            require(_mintAmount == 1);
-            require(msg.value > cost - 1, "Insufficient funds");
-            require(totalSupply() + _mintAmount < MaxSupply+1);
-            require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe.");
-            FreeMint[msg.sender] = true;
-        }
+        require(!PubSale);
+        require(_mintAmount == 1, "We said 1 only okay?");
+        require(msg.value > cost - 1, "You're poor, NGMI for this mint.");
+        require(totalSupply() + _mintAmount < MaxSupply+1);
+        require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe, we don't know you.");
+        FreeMint[msg.sender] = true;
         _safeMint(msg.sender, _mintAmount);
     }
     
