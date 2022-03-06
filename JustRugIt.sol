@@ -42,7 +42,7 @@ contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
         _safeMint(msg.sender, _mintAmount);
     }
 
-    function mint(bytes32[] memory prooft) external nonReentrant {
+    function mint(bytes32[] memory proof) external nonReentrant {
         require(!Paused);
         require(!PubSale);
         require(!FreeMint[msg.sender]);
