@@ -35,24 +35,21 @@ contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
 
     function mint(uint256 _mintAmount) external payable nonReentrant {
         require(!Paused);
-
         require(PubSale);
         require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers.");
-        require(msg.value > cost * _mintAmount - 1, "You're poor, NGMI for this mint.");
+        require(msg.value > cost * _mintAmount - 1, "You're too poor, NGMI for this mint.");
         require(totalSupply() + _mintAmount < pubSale+1);
-    
         _safeMint(msg.sender, _mintAmount);
     }
 
-    function mint(bytes32[] memory proof, uint256 _mintAmount) external payable nonReentrant {
+    function mint(bytes32[] memory prooft) external nonReentrant {
         require(!Paused);
         require(!PubSale);
-        require(_mintAmount == 1, "We said 1 only okay?");
-        require(msg.value > cost - 1, "You're poor, NGMI for this mint.");
-        require(totalSupply() + _mintAmount < MaxSupply+1);
+        require(!FreeMint[msg.sender]);
+        require(totalSupply() + 1 < MaxSupply+1);
         require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe, we don't know you.");
         FreeMint[msg.sender] = true;
-        _safeMint(msg.sender, _mintAmount);
+        _safeMint(msg.sender, 1);
     }
     
     //view
