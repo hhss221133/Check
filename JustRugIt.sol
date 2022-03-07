@@ -17,9 +17,9 @@ contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
     string public Uri = "";
     string public HiddenUri = "Okay";
 
-    uint256 public pubSale = 20;
-    uint256 public MaxSupply = 40;
-    uint256 public cost = 0.01 ether;
+    uint256 public pubSale = 1872;
+    uint256 public MaxSupply = 2222;
+    uint256 public cost = 0.0169 ether;
 
     bytes32 public MerkleRoot;
 
@@ -36,8 +36,8 @@ contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
     function mint(uint256 _mintAmount) external payable nonReentrant {
         require(!Paused);
         require(PubSale);
-        require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers.");
-        require(msg.value > cost * _mintAmount - 1, "You're too poor, NGMI for this mint.");
+        require(_mintAmount > 0 && _mintAmount < 11, "You can't rug the ruggers");
+        require(msg.value > cost * _mintAmount - 1, "You're too poor, NGMI for this mint");
         require(totalSupply() + _mintAmount < pubSale+1);
         _safeMint(msg.sender, _mintAmount);
     }
@@ -45,7 +45,7 @@ contract JustRugIt is ERC721A, Ownable, ReentrancyGuard {
     function mint(bytes32[] memory proof) external nonReentrant {
         require(!Paused);
         require(!PubSale);
-        require(!FreeMint[msg.sender]);
+        require(!FreeMint[msg.sender], "Welcome back");
         require(totalSupply() + 1 < MaxSupply+1);
         require(MerkleProof.verify(proof, MerkleRoot, keccak256(abi.encodePacked(msg.sender))), "Cringe, we don't know you.");
         FreeMint[msg.sender] = true;
